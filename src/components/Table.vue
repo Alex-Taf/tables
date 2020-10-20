@@ -8,12 +8,12 @@
                 <el-input placeholder="Please input to Search" v-model="search" clearable></el-input>
               </el-col>
               <el-col :span="4">
-                <el-select v-model="value" placeholder="Select by">
-                  <el-option v-for="item in selectOptions" :key="item.value" :label="item.label" :value="item.value" class="table-select"></el-option>
+                <el-select v-model="selectValue" placeholder="Select by">
+                  <el-option v-for="item in selectOptions" :key="item.selectValue" :label="item.label" :value="item.value" class="table-select"></el-option>
                 </el-select>
               </el-col>
             </el-row>
-            <el-table :data="searchedData">
+            <el-table :data="searchedData" v-bind:row-class-name="tableRowClassName">
               <el-table-column prop="id" label="ID" width="180"></el-table-column>
               <el-table-column prop="name" label="Name" width="180"></el-table-column>
               <el-table-column prop="username" label="Username"></el-table-column>
@@ -36,6 +36,11 @@ export default {
       fetch('https://jsonplaceholder.typicode.com/users')
       .then(response => response.json())
       .then(json => { this.tableData = json })
+    },
+    tableRowClassName() {
+      if (this.searchedData.length === 1) {
+        return 'success-row'
+      }
     }
   },
   computed: {
@@ -105,10 +110,6 @@ a {
 
 .table-select {
   display: block;
-}
-
-.el-table .warning-row {
-  background: oldlace;
 }
 
 .el-table .success-row {
