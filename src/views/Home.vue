@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <Table title="Таблица"/>
+    <Table title="Пользователи"/>
   </div>
 </template>
 
