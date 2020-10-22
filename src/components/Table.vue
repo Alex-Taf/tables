@@ -36,9 +36,9 @@
     <div class="table">
       <h1>{{ title }}</h1>
       <div class="table-container">
-            <div class="table-content" v-loading="isLoading" element-loading-background="#ffffff">
-                  <div v-bind:class="{ hide: isLoading }"><el-input placeholder="Искать" v-model="search" class="hide" clearable></el-input></div>
-                  <el-table :data="searchedData" v-bind:class="{ hide: isLoading }" v-bind:row-class-name="tableRowClassName">
+            <div class="table-content" v-loading="getLoadingStatus" element-loading-background="#ffffff">
+                  <div v-bind:class="{ hide: getLoadingStatus }"><el-input placeholder="Искать" v-model="search" class="hide" clearable></el-input></div>
+                  <el-table :data="searchedData" v-bind:class="{ hide: getLoadingStatus }" v-bind:row-class-name="tableRowClassName">
                     <el-table-column prop="id" label="ID" width="180" sortable></el-table-column>
                     <el-table-column prop="name" label="Name" width="180" sortable></el-table-column>
                     <el-table-column prop="username" label="Username" sortable></el-table-column>
@@ -51,12 +51,11 @@
                       </template>
                     </el-table-column>
                   </el-table>
-                  <div v-if="searchedData.length === 0" class="not-found-notice" v-bind:class="{ hide: isLoading }">
+                  <div v-if="searchedData.length === 0" class="not-found-notice" v-bind:class="{ hide: getLoadingStatus }">
                       <h3>По данному запросу ничего не найдено</h3>
                   </div>
-                  <el-pagination background layout="prev, pager, next" class="pagination" v-bind:class="{ hide: isLoading }" 
-                  :current-page.sync="pagination.currentPage" @current-change="changeCurrentPage" 
-                  :page-count="pagination.pageCount">
+                  <el-pagination background layout="prev, pager, next" class="pagination" v-bind:class="{ hide: getLoadingStatus }" 
+                  :current-page.sync="getCurrentPage" @current-change="setCurrentPage" :page-count="getPageCount">
                   </el-pagination>
             </div>
       </div>
@@ -65,32 +64,25 @@
 </template>
 
 <script>
+import { mapGetters, mapActions, mapMutations } from 'vuex'
 export default {
   name: 'Table',
   props: {
     title: String
   },
   methods: {
-    async fetchData() {
-      await fetch('https://jsonplaceholder.typicode.com/users')
-      .then(response => response.json())
-      .then(json => { 
-          this.tableData = json
-          this.setPageCount()
-          this.isLoading = false
-      })
-    },
+    ...mapActions(['fetchUsers']),
+    ...mapMutations(['saveUserData', 'deleteUser', 'setCurrentPage']),
     tableRowClassName() {
-      if (this.searchedData.length === 1 && this.tableData.length > 1 
-          && this.pagination.currentPage !== this.pagination.pageCount) {
+      if (this.searchedData.length === 1 && this.getUsers.length > 1 
+          && this.getCurrentPage !== this.getPageCount) {
         return 'success-row'
       }
     },
     handleSave(index, name) {
-      this.tableData[index].name = this.editDialogInputs.name
-      this.tableData[index].username = this.editDialogInputs.username
-      this.tableData[index].email = this.editDialogInputs.email
-      this.tableData[index].phone = this.editDialogInputs.phone
+      let userData = this.editDialogInputs
+      userData.index = index
+      this.saveUserData(userData)
       this.$message({
         message: `Данные пользователя ${name} успешно изменены`,
         type: 'success'
@@ -98,8 +90,7 @@ export default {
       this.editDialogVisible = false
     },
     handleDelete(index, name) {
-      this.tableData.splice(index, 1)
-      this.setPageCount()
+      this.deleteUser(index)
       this.deleteDialogVisible = false
       this.$message({
         message: `Пользователь ${name} успешно удалён`,
@@ -107,8 +98,7 @@ export default {
       })
     },
     handleClose() {
-      this.editDialogVisible = false
-      this.deleteDialogVisible = false
+      this.editDialogVisible = this.deleteDialogVisible = false
     },
     showHandleDelete(scope) {
       this.onDeleteScope = scope
@@ -121,28 +111,26 @@ export default {
       this.editDialogInputs.email = scope.row.email
       this.editDialogInputs.phone = scope.row.phone
       this.editDialogVisible = true
-    },
-    changeCurrentPage(val) {
-      this.pagination.currentPage = val
-    },
-    setPageCount() {
-      this.pagination.pageCount = Math.ceil(this.tableData.length / 3)
     }
   },
   computed: {
+    ...mapGetters(['getUsers', 'getLoadingStatus', 'getPageCount', 'getCurrentPage']),
     searchedData() {
-      let filteredData = this.tableData.filter(data => !this.search || data.name.toLowerCase().includes(this.search.toLowerCase()))
+      let searchedData = this.getUsers.filter(item => !this.search || 
+      item.name.toLowerCase().includes(this.search.toLowerCase()) || 
+      item.username.toLowerCase().includes(this.search.toLowerCase()) ||
+      item.email.toLowerCase().includes(this.search.toLowerCase()) ||
+      item.phone.toLowerCase().includes(this.search.toLowerCase()))
+
       if (this.search.length > 0) {
-        return filteredData.splice(0, 3)
+        return searchedData.splice(0, 3)
       } else {
-        return filteredData.splice((this.pagination.currentPage - 1) * 3, 3)
+        return searchedData.splice((this.getCurrentPage - 1) * 3, 3)
       }
     }
   },
   data() {
     return {
-      isLoading: true,
-      tableData: [],
       search: '',
       onDeleteScope: null,  
       deleteDialogVisible: false,
@@ -154,14 +142,10 @@ export default {
         email: '',
         phone: ''
       },
-      pagination: {
-        currentPage: 1,
-        pageCount: 0
-      } 
     }
   },
-  mounted() {
-    this.fetchData()
+  async mounted() {
+    this.fetchUsers()
   }
 }
 </script>
