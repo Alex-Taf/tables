@@ -7,9 +7,11 @@ export default {
                 let users = json
                 ctx.commit('loadUsers', users)
                 ctx.commit('isLoaded', true)
-                ctx.commit('setPageCount', users)
             })
-          }
+        },
+        setCurrentScope(ctx, scope) {
+            ctx.commit('setScope', scope)
+        }
     },
     mutations: {
         loadUsers(state, users) {
@@ -18,11 +20,8 @@ export default {
         isLoaded(state, flag) {
             state.isLoading = !flag
         },
-        setPageCount(state, users) {
-            state.pagination.pageCount = Math.ceil(users.length / 3)
-        },
-        setCurrentPage(state, val) {
-            state.pagination.currentPage = val
+        setScope(state, scope) {
+            state.scope = scope
         },
         saveUserData(state, userData) {
             state.users[userData.index].name = userData.name
@@ -35,12 +34,9 @@ export default {
         }
     },
     state: {
+        scope: null,
         users: [],
-        isLoading: true,
-        pagination: {
-            pageCount: 0,
-            currentPage: 1
-        }
+        isLoading: true
     },
     getters: {
         getUsers(state) {
@@ -49,11 +45,8 @@ export default {
         getLoadingStatus(state) {
             return state.isLoading
         },
-        getPageCount(state) {
-            return state.pagination.pageCount
-        },
-        getCurrentPage(state) {
-            return state.pagination.currentPage
+        getScope(state) {
+            return state.scope
         }
     }
 }
