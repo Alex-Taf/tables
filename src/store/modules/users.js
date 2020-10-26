@@ -29,6 +29,22 @@ export default {
             state.users[userData.index].email = userData.email
             state.users[userData.index].phone = userData.phone
         },
+        addUserData(state, userData) {
+            fetch('https://jsonplaceholder.typicode.com/users', {
+                method: 'POST',
+                body: JSON.stringify({
+                    id: userData.id,
+                    name: userData.name,
+                    username: userData.username,
+                    email: userData.email,
+                    phone: userData.phone
+                }),
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8',
+                },
+            }).then(response => response.json())
+              .then(json => { state.users.push(json) })
+        },
         deleteUser(state, id) {
             state.users.splice(id, 1)
         }

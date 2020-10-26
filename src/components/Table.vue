@@ -5,8 +5,14 @@
       <h1>{{ title }}</h1>
       <div class="table-container">
             <div class="table-content" v-loading="getLoadingStatus" element-loading-background="#ffffff">
-                  <div v-bind:class="{ hide: getLoadingStatus }"><el-input placeholder="Искать" v-model="search" class="hide" clearable></el-input></div>
-                  <el-table :data="searchedData" v-bind:class="{ hide: getLoadingStatus }" v-bind:row-class-name="tableRowClassName">
+                  <el-row :gutter="20" class="form-row">
+                    <div v-bind:class="{ hide: getLoadingStatus }">
+                      <el-col :span="21"><el-input placeholder="Искать" v-model="search" class="hide" clearable></el-input></el-col>
+                      <el-col :span="2"><el-button type="primary" @click="showModalAdd">Добавить</el-button></el-col>
+                    </div>
+                  </el-row>
+                  <el-table :data="searchedData" v-bind:class="{ hide: getLoadingStatus }" 
+                  @row-dblclick="viewUserProfile" v-bind:row-class-name="tableRowClassName">
                     <el-table-column prop="id" label="ID" width="180" sortable></el-table-column>
                     <el-table-column prop="name" label="Name" width="180" sortable></el-table-column>
                     <el-table-column prop="username" label="Username" sortable></el-table-column>
@@ -22,9 +28,8 @@
                   <div v-if="searchedData.length === 0" class="not-found-notice" v-bind:class="{ hide: getLoadingStatus }">
                       <h3>По данному запросу ничего не найдено</h3>
                   </div>
-                  <el-pagination background layout="prev, pager, next" class="pagination" v-bind:class="{ hide: getLoadingStatus }" 
-                  :current-page.sync="pagination.currentPage" @current-change="setCurrentPage" :page-count="setPageCount" hide-on-single-page>
-                  </el-pagination>
+                  <paginate v-model="currentPage" :page-count="setPageCount" :click-handler="setCurrentPage" :prev-text="'<'" :next-text="'>'" 
+                    :container-class="'pagination'" :page-class="'page-item'" :active-class="'item-active'" />
             </div>
       </div>
     </div>
@@ -39,13 +44,17 @@ export default {
     title: String
   },
   methods: {
-    ...mapActions(['fetchUsers', 'setModalDeleteVisible', 'setModalSaveVisible', 'setCurrentScope']),
-    ...mapMutations(['saveUserData', 'setDeleteVisible', 'setSaveVisible', 'setScope']),
+    ...mapActions(['fetchUsers', 'setModalDeleteVisible', 'setModalSaveVisible', 'setCurrentScope', 'setModalAddVisible']),
+    ...mapMutations(['saveUserData', 'setDeleteVisible', 'setSaveVisible', 'setScope', 'setAddVisible']),
     tableRowClassName() {
       if (this.searchedData.length === 1 && this.getUsers.length > 1 
-          && this.pagination.currentPage !== this.setPageCount) {
+          && this.currentPage !== this.setPageCount) {
         return 'success-row'
       }
+    },
+    showModalAdd() {
+      this.setModalAddVisible(true)
+      this.$emit('lastPage', this.setPageCount)
     },
     showModalDelete(scope) {
       this.setModalDeleteVisible(true)
@@ -57,8 +66,11 @@ export default {
     },
     setCurrentPage(val) {
       this.$router.push(`${this.$route.path}?page=${val}`)
-      this.pagination.currentPage = val
-    } 
+      this.currentPage = val
+    },
+    viewUserProfile(evt) {
+      this.$router.push(`${this.$route.path}/user/${evt.id}`)
+    }
   },
   computed: {
     ...mapGetters(['getUsers', 'getLoadingStatus']),
@@ -72,7 +84,7 @@ export default {
       if (this.search.length > 0) {
         return searchedData.splice(0, 3)
       } else {
-        return searchedData.splice((this.pagination.currentPage - 1) * 3, 3)
+        return searchedData.splice((this.currentPage - 1) * 3, 3)
       }
     },
     setPageCount() {
@@ -83,13 +95,12 @@ export default {
     return {
       search: '',
       routePageQuery: parseInt(this.$route.query.page),
-      pagination: {
-        currentPage: 1
-      }
+      currentPage: 0
     }
   },
   async mounted() {
     this.fetchUsers()
+    this.currentPage = this.routePageQuery
   }
 }
 </script>
@@ -109,9 +120,32 @@ li {
   margin: 0 10px;
 }
 
-a {
+.pagination {
+  user-select: none;
+  margin: 15px !important;
+}
+
+.page-item {
+  padding: 5px;
   color: #42b983;
 }
+
+.page-item > a {
+  padding: 5px;
+}
+
+.page-item > a:focus {
+  background-color: #42b983;
+}
+
+.item-active {
+  background-color: #42b983;
+  color: white;
+}
+
+/* a {
+  color: #42b983;
+} */
 
 .table-container {
   display: flex;

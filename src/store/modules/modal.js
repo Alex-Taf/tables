@@ -5,6 +5,9 @@ export default {
         },
         setModalSaveVisible(ctx, flag) {
             ctx.commit('setSaveVisible', flag)
+        },
+        setModalAddVisible(ctx, flag) {
+            ctx.commit('setAddVisible', flag)
         }
     },
     mutations: {
@@ -13,12 +16,16 @@ export default {
         },
         setSaveVisible(state, flag) {
             state.modal.saveModalVisible = flag
+        },
+        setAddVisible(state, flag) {
+            state.modal.addModalVisible = flag
         }
     },
     state: {
         modal: {
             deleteModalVisible: false,
-            saveModalVisible: false
+            saveModalVisible: false,
+            addModalVisible: false
         }
     },
     getters: {
@@ -27,6 +34,9 @@ export default {
         },
         isSaveModalVisible(state) {
             return state.modal.saveModalVisible
+        },
+        isAddModalVisible(state) {
+            return state.modal.addModalVisible
         }
     }
 }

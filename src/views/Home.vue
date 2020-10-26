@@ -1,23 +1,37 @@
 <template>
   <div class="home">
-    <SaveModal/>
+    <AddModal :lastPage="lastPage"/>
+    <EditModal/>
     <DeleteModal/>
-    <Table title="Пользователи"/>
+    <Table title="Пользователи" @lastPage="getLastPage"/>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import SaveModal from '@/components/controls/SaveModal'
+import AddModal from '@/components/controls/AddModal'
+import EditModal from '@/components/controls/EditModal'
 import DeleteModal from '@/components/controls/DeleteModal'
 import Table from '@/components/Table'
 
 export default {
   name: 'Home',
   components: {
-    SaveModal,
+    AddModal,
+    EditModal,
     DeleteModal,
     Table
-  }
+ },
+ methods: {
+   getLastPage(data) {
+     this.lastPage = data
+     console.log(this.lastPage)
+   }
+ },
+ data() {
+   return {
+     lastPage: 0
+   }
+ }
 }
 </script>
