@@ -29,7 +29,7 @@
                       <h3>По данному запросу ничего не найдено</h3>
                   </div>
                   <paginate v-model="currentPage" :page-count="setPageCount" :click-handler="setCurrentPage" :prev-text="'<'" :next-text="'>'" 
-                    :container-class="'pagination'" :page-class="'page-item'" :active-class="'item-active'" />
+                  :container-class="'pagination'" :page-class="'page-item'" :active-class="'item-active'" />
             </div>
       </div>
     </div>
@@ -69,7 +69,7 @@ export default {
       this.currentPage = val
     },
     viewUserProfile(evt) {
-      this.$router.push(`${this.$route.path}/user/${evt.id}`)
+      this.$router.push({ name: 'User', params: { id: evt.id } })
     }
   },
   computed: {

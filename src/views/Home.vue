@@ -25,7 +25,6 @@ export default {
  methods: {
    getLastPage(data) {
      this.lastPage = data
-     console.log(this.lastPage)
    }
  },
  data() {
