@@ -38,8 +38,9 @@ export default {
             let userData = this.editDialogInputs
             userData.index = index
             this.saveUserData(userData)
-            this.$message({
+            this.$notify({
                 message: `Данные пользователя ${name} успешно изменены`,
+                dangerouslyUseHTMLString: true,
                 type: 'success'
             })
             this.setModalSaveVisible(false)

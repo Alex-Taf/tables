@@ -23,14 +23,14 @@ export default {
     Table
  },
  methods: {
-   getLastPage(data) {
-     this.lastPage = data
-   }
+  getLastPage(data) {
+    this.lastPage = data
+  }
  },
  data() {
-   return {
-     lastPage: 0
-   }
+  return {
+    lastPage: 0
+  }
  }
 }
 </script>

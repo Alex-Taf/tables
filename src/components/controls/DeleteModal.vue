@@ -18,8 +18,9 @@ export default {
       handleDelete(index, name) {
       this.deleteUser(index)
       this.setModalDeleteVisible(false)
-      this.$message({
-        message: `Пользователь ${name} успешно удалён`,
+      this.$notify({
+        message: `Пользователь <b>${name}</b> успешно удалён`,
+        dangerouslyUseHTMLString: true,
         type: 'success'
       })
     },

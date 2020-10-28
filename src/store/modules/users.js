@@ -9,6 +9,15 @@ export default {
                 ctx.commit('isLoaded', true)
             })
         },
+        fetchUser(ctx, id) {
+            fetch(`https://jsonplaceholder.typicode.com/users/${id}`)
+            .then(response => response.json())
+            .then(json => {
+                let user = json
+                ctx.commit('loadUsers', user)
+                ctx.commit('isLoaded', true)
+            })
+        },
         setCurrentScope(ctx, scope) {
             ctx.commit('setScope', scope)
         }
@@ -57,9 +66,6 @@ export default {
     getters: {
         getUsers(state) {
             return state.users
-        },
-        getUserById: state => id => {
-            return state.users.find(user => user.id == id);
         },
         getLoadingStatus(state) {
             return state.isLoading

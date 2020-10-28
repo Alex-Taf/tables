@@ -110,16 +110,6 @@ h3 {
   margin: 40px 0 0;
 }
 
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-
 .pagination {
   user-select: none;
   margin: 15px !important;
@@ -143,9 +133,10 @@ li {
   color: white;
 }
 
-/* a {
-  color: #42b983;
-} */
+.table {
+  height: 100vh;
+  margin-top: 100px;
+}
 
 .table-container {
   display: flex;

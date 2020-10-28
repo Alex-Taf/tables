@@ -41,6 +41,11 @@ export default {
             data.id = this.getUsers.length + 1
             this.addUserData(data)
             this.fetchUsers()
+            this.$notify({
+                message: `Пользователь <b>${this.newUser.name}</b> успешно создан`,
+                dangerouslyUseHTMLString: true,
+                type: 'success'
+            })
             this.resetFields()
             this.handleClose()
             this.$router.replace(`${this.$route.path}?page=${this.lastPage}`)
