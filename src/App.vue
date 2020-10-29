@@ -1,21 +1,23 @@
 <template>
   <div id="app">
     <div id="nav">
-      <el-menu class="el-menu-vertical-demo" :collapse="isMenuCollapse">
-        <Burger class="burger" @checked="isChecked"/>
-        <router-link to="/home">
-          <el-menu-item index="1" class="menu-item" @click="collapse">
-            <i class="el-icon-menu"></i>
-            <span slot="title">Таблица</span>
-          </el-menu-item>
-        </router-link>
-        <router-link to="/about">
-          <el-menu-item index="2" class="menu-item" @click="collapse">
-            <i class="el-icon-document"></i>
-            <span slot="title">О таблицах</span>
-          </el-menu-item>
-        </router-link>
-      </el-menu>
+      <transition name="el-zoom-in-center">
+        <el-menu class="el-menu-vertical-demo" :collapse="isMenuCollapse">
+          <Burger class="burger" @checked="isChecked"/>
+          <router-link to="/home">
+            <el-menu-item index="1" class="menu-item" @click="collapse">
+              <i class="el-icon-menu"></i>
+              <span slot="title">Таблица</span>
+            </el-menu-item>
+          </router-link>
+          <router-link to="/about">
+            <el-menu-item index="2" class="menu-item" @click="collapse">
+              <i class="el-icon-document"></i>
+              <span slot="title">О таблицах</span>
+            </el-menu-item>
+          </router-link>
+        </el-menu>
+      </transition>
     </div>
     <router-view/>
   </div>
