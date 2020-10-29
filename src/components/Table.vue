@@ -2,10 +2,10 @@
   <div>
     <!--Table-->
     <div class="table">
-      <h1>{{ title }}</h1>
+      <h1 data-aos="fade-down" data-aos-duration="1000">{{ title }}</h1>
       <div class="table-container">
             <div class="table-content" v-loading="getLoadingStatus" element-loading-background="#ffffff">
-                  <el-row :gutter="20" class="form-row">
+                  <el-row :gutter="20" class="form-row" data-aos="fade-down" data-aos-duration="1000">
                     <div v-bind:class="{ hide: getLoadingStatus }">
                       <el-col :span="21"><el-input placeholder="Искать" v-model="search" class="hide" clearable></el-input></el-col>
                       <el-col :span="2"><el-button type="primary" @click="showModalAdd">Добавить</el-button></el-col>
@@ -25,11 +25,12 @@
                       </template>
                     </el-table-column>
                   </el-table>
-                  <div v-if="searchedData.length === 0" class="not-found-notice" v-bind:class="{ hide: getLoadingStatus }">
+                  <div v-if="searchedData.length === 0" class="not-found-notice" v-bind:class="{ hide: getLoadingStatus }" data-aos="fade-right">
                       <h3>По данному запросу ничего не найдено</h3>
                   </div>
                   <paginate v-model="currentPage" :page-count="setPageCount" :click-handler="setCurrentPage" :prev-text="'<'" :next-text="'>'" 
-                  :container-class="'pagination'" :page-class="'page-item'" :active-class="'item-active'" />
+                  :container-class="'pagination'" :page-class="'page-item'" :active-class="'item-active'"
+                  data-aos="fade-up" data-aos-duration="1000" />
             </div>
       </div>
     </div>
@@ -38,13 +39,14 @@
 
 <script>
 import { mapGetters, mapActions, mapMutations } from 'vuex'
+
 export default {
   name: 'Table',
   props: {
     title: String
   },
   methods: {
-    ...mapActions(['fetchUsers', 'setModalDeleteVisible', 'setModalSaveVisible', 'setCurrentScope', 'setModalAddVisible']),
+    ...mapActions(['fetchUsers', 'setModalDeleteVisible', 'setModalSaveVisible', 'setCurrentScope', 'setModalAddVisible', 'fetchUser']),
     ...mapMutations(['saveUserData', 'setDeleteVisible', 'setSaveVisible', 'setScope', 'setAddVisible']),
     tableRowClassName() {
       if (this.searchedData.length === 1 && this.getUsers.length > 1 
@@ -75,16 +77,19 @@ export default {
   computed: {
     ...mapGetters(['getUsers', 'getLoadingStatus']),
     searchedData() {
-      let searchedData = this.getUsers.filter(item => !this.search || 
+      if (this.getUsers) {
+        let searchedData = this.getUsers.filter(item => !this.search || 
                          item.name.toLowerCase().includes(this.search.toLowerCase()) || 
                          item.username.toLowerCase().includes(this.search.toLowerCase()) ||
                          item.email.toLowerCase().includes(this.search.toLowerCase()) ||
                          item.phone.toLowerCase().includes(this.search.toLowerCase()))
-
-      if (this.search.length > 0) {
-        return searchedData.splice(0, 3)
+        if (this.search.length > 0) {
+          return searchedData.splice(0, 3)
+        } else {
+          return searchedData.splice((this.currentPage - 1) * 3, 3)
+        }                 
       } else {
-        return searchedData.splice((this.currentPage - 1) * 3, 3)
+        return null
       }
     },
     setPageCount() {
@@ -168,13 +173,5 @@ h3 {
 
 .not-found-notice {
   color: #e87979;
-}
-
-.el-loading-mask {
-  min-height: 700px;
-}
-
-.hide {
-  display: none;
 }
 </style>

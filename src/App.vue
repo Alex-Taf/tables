@@ -3,14 +3,14 @@
     <div id="nav">
       <el-menu class="el-menu-vertical-demo" :collapse="isMenuCollapse">
         <Burger class="burger" @checked="isChecked"/>
-        <router-link to="/home" @click="collapse">
-          <el-menu-item index="1" class="menu-item">
+        <router-link to="/home">
+          <el-menu-item index="1" class="menu-item" @click="collapse">
             <i class="el-icon-menu"></i>
             <span slot="title">Таблица</span>
           </el-menu-item>
         </router-link>
         <router-link to="/about">
-          <el-menu-item index="2" class="menu-item">
+          <el-menu-item index="2" class="menu-item" @click="collapse">
             <i class="el-icon-document"></i>
             <span slot="title">О таблицах</span>
           </el-menu-item>
@@ -33,7 +33,7 @@ export default {
       this.isMenuCollapse = !this.isMenuCollapse
     },
     collapse() {
-      return !this.isMenuCollapse ? this.isMenuCollapse = !this.isMenuCollapse : null
+      if (!this.isMenuCollapse) this.isMenuCollapse = !this.isMenuCollapse
     }
   },
   data() {
@@ -69,13 +69,8 @@ li {
   margin: 0 10px;
 }
 
-
 .menu-item {
   padding: 0px 30px !important;
-}
-
-.el-menu {
-  transition: .4s !important;
 }
 
 .el-menu-vertical-demo {
@@ -89,5 +84,9 @@ li {
 
 .burger {
   padding: 30px !important;
+}
+
+.el-loading-mask {
+  min-height: 80vh;
 }
 </style>

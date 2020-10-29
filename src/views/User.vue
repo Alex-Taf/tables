@@ -1,28 +1,28 @@
 <template>
-    <div>
-        <div class="user">
+    <div v-loading="getLoadingStatus" element-loading-background="#ffffff">
+        <div class="user" :class="{ hide: getLoadingStatus }">
             <el-row :gutter="10" class="user-avatar">
                 <el-col :span="24">
                     <el-avatar :size="200" class="user-avatar-image" :src="`http://lorempixel.com/640/360`"></el-avatar>
                 </el-col>
                 <el-col :span="24" class="user-avatar-label">
-                    <span class="user-avatar-label-name">{{ user.name }}</span>
-                    <span class="user-avatar-label-email">{{ user.email }}</span>
+                    <span class="user-avatar-label-name">{{ getUserById.name || 'template-text' }}</span>
+                    <span class="user-avatar-label-email">{{ getUserById.email || 'template-text' }}</span>
                 </el-col>
             </el-row>
             <el-row :gutter="10" class="user-info">
                 <el-row :gutter="10" class="user-info-company">
                     <el-col :span="24" class="user-info-company-name user-info-company-item">
                         <span class="user-info-company-item-title">COMPANY</span>
-                        <span class="user-info-company-name-label user-info-company-item-label">{{ user.company.name }}</span>
+                        <span class="user-info-company-name-label user-info-company-item-label">{{ getUserById.company.name || 'template-text' }}</span>
                     </el-col>
                     <el-col :span="24" class="user-info-company-catchphrase user-info-company-item">
                         <span class="user-info-company-item-title">CATCHPHRASE</span>
-                        <span class="user-info-company-catchphrase-label user-info-company-item-label">{{ user.company.catchPhrase }}</span>
+                        <span class="user-info-company-catchphrase-label user-info-company-item-label">{{ getUserById.company.catchPhrase || 'template-text' }}</span>
                     </el-col>
                     <el-col :span="24" class="user-info-company-bs user-info-company-item">
                         <span class="user-info-company-item-title">BS</span>
-                        <span class="user-info-company-bs-label user-info-company-item-label">{{ user.company.bs }}</span>
+                        <span class="user-info-company-bs-label user-info-company-item-label">{{ getUserById.company.bs || 'template-text' }}</span>
                     </el-col>
                 </el-row>
             </el-row>
@@ -32,38 +32,22 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
+
 export default {
     methods: {
-        fetchUser() {
-            this.$store.dispatch('fetchUser', { id: this.userId })
-        }
+        ...mapActions(['fetchUserById'])
     },
     computed:{
-        user() {
-            return this.$store.getters.getUsers()
-        }
+        ...mapGetters(['getUserById', 'getLoadingStatus'])
     },
     data() {
         return {
-            userId: +this.$route.params.id,
-            labelPosition: 'right',
-            formLabelAlign: {
-                name: '',
-                username: '',
-                email: '',
-                phone: '',
-                city: '',
-                website: ''
-            }
+            userId: +this.$route.params.id
         }
     },
     mounted() {
-        this.formLabelAlign.name = this.user.name
-        this.formLabelAlign.username = this.user.username
-        this.formLabelAlign.email = this.user.email
-        this.formLabelAlign.phone = this.user.phone
-        this.formLabelAlign.city = this.user.address.city
-        this.formLabelAlign.website = this.user.website
+        this.fetchUserById(this.userId)
     }
 }
 </script>
@@ -133,5 +117,9 @@ export default {
 
 .back {
     margin: 50px;
+}
+
+.hide {
+    display: none;
 }
 </style>

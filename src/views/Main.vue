@@ -1,6 +1,8 @@
 <template>
     <div class="main">
-        <router-link to="/home"><el-button type="success" class="getstarted">Приступить к работе</el-button></router-link>
+        <router-link to="/home">
+                <el-button type="success" class="getstarted" data-aos="fade-up" data-aos-duration="2000">Приступить к работе</el-button>
+        </router-link>
     </div> 
 </template>
 

@@ -1,6 +1,7 @@
 export default {
     actions: {
         async fetchUsers(ctx) {
+            ctx.commit('isLoaded', false)
             await fetch('https://jsonplaceholder.typicode.com/users')
             .then(response => response.json())
             .then(json => { 
@@ -9,12 +10,13 @@ export default {
                 ctx.commit('isLoaded', true)
             })
         },
-        fetchUser(ctx, id) {
+        fetchUserById(ctx, id) {
+            ctx.commit('isLoaded', false)
             fetch(`https://jsonplaceholder.typicode.com/users/${id}`)
             .then(response => response.json())
-            .then(json => {
+            .then(json => { 
                 let user = json
-                ctx.commit('loadUsers', user)
+                ctx.commit('loadUserById', user)
                 ctx.commit('isLoaded', true)
             })
         },
@@ -23,6 +25,9 @@ export default {
         }
     },
     mutations: {
+        loadUserById(state, user) {
+            state.user = user
+        },
         loadUsers(state, users) {
             state.users = users 
         },
@@ -61,9 +66,13 @@ export default {
     state: {
         scope: null,
         users: [],
+        user: null,
         isLoading: true
     },
     getters: {
+        getUserById(state) {
+            if (state.user !== null) return state.user
+        },
         getUsers(state) {
             return state.users
         },
