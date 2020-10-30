@@ -8,7 +8,7 @@
                   <el-row :gutter="20" class="form-row" data-aos="fade-down" data-aos-duration="1000">
                     <div v-bind:class="{ hide: getLoadingStatus }">
                       <el-col :span="21"><el-input placeholder="Искать" v-model="search" class="hide" clearable></el-input></el-col>
-                      <el-col :span="2"><el-button type="primary" @click="showModalAdd">Добавить</el-button></el-col>
+                      <el-col :span="2"><el-button type="success" @click="showModalAdd">Добавить</el-button></el-col>
                     </div>
                   </el-row>
                   <el-table :data="searchedData" v-bind:class="{ hide: getLoadingStatus }" 
@@ -20,7 +20,7 @@
                     <el-table-column prop="phone" label="Phone" sortable></el-table-column>
                     <el-table-column>
                       <template slot-scope="scope">
-                        <el-button size="mini" @click="showModalSave(scope)">Изменить</el-button>
+                        <el-button size="mini" type="primary" @click="showModalSave(scope)">Изменить</el-button>
                         <el-button size="mini" type="danger" @click="showModalDelete(scope)">Удалить</el-button>
                       </template>
                     </el-table-column>
@@ -163,15 +163,20 @@ h3 {
   color: green;
 }
 
+.el-table__empty-block {
+  display: none !important;
+}
+
 .form-row {
   margin-bottom: 10px;
 }
 
 .pagination {
-  margin: 10px
+  margin: 60px;
 }
 
 .not-found-notice {
+  margin: 20px 30px;
   color: #e87979;
 }
 </style>

@@ -10,8 +10,14 @@
               <span slot="title">Таблица</span>
             </el-menu-item>
           </router-link>
-          <router-link to="/about">
+          <router-link to="/charts">
             <el-menu-item index="2" class="menu-item" @click="collapse">
+                <i class="el-icon-s-data"></i>
+                <span slot="title">Статистика</span>
+            </el-menu-item>
+          </router-link>
+          <router-link to="/about">
+            <el-menu-item index="3" class="menu-item" @click="collapse">
               <i class="el-icon-document"></i>
               <span slot="title">О таблицах</span>
             </el-menu-item>

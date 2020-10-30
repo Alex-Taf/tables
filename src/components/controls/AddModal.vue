@@ -18,7 +18,7 @@
       </el-row>
       <span slot="footer" class="dialog-footer">
         <el-button @click="handleClose">Отмена</el-button>
-        <el-button type="primary" @click="handleAdd()">Добавить</el-button>
+        <el-button type="success" @click="handleAdd()">Добавить</el-button>
       </span>
     </el-dialog>
 </template>

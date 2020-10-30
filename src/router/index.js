@@ -4,6 +4,7 @@ import Main from '../views/Main'
 import Home from '../views/Home'
 import User from '../views/User'
 import About from '../views/About'
+import Charts from '../views/Charts'
 
 Vue.use(VueRouter)
 
@@ -21,15 +22,17 @@ const routes = [
   {
     path: '/about',
     name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
     component: About
   },
   {
     path: '/user/:id',
     name: 'User',
     component: User
+  },
+  {
+    path: '/charts',
+    name: 'Charts',
+    component: Charts
   }
 ]
 
